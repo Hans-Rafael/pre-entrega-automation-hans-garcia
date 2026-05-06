@@ -62,8 +62,8 @@ python3 -m pytest tests/test_saucedemo.py -v --html=reports/reporte.html
 ---
 ## 👤 Contacto
 **Autor:** Hans Garcia  
-[![LinkedIn](https://shields.io)](https://linkedin.com)  
-[![Portfolio](https://shields.io)](https://hans-rafael.dev)
+- **LinkedIn:** [://linkedin.com](https://://linkedin.com)  
+- **Portfolio:** [hans-rafael.dev](https://hans-rafael.dev)
 
 *Proyecto realizado para la Pre-Entrega de QA Automation.*
 
