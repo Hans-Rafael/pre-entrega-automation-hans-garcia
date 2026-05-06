@@ -1,4 +1,5 @@
 import pytest
+import json
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,7 +10,7 @@ class TestSauceDemo:
     def setup_method(self):
         """Este método se ejecuta antes de cada test"""
         self.driver = inicializar_driver()
-        self.wait = WebDriverWait(self.driver, 10)
+        self.wait = WebDriverWait(self.driver, 5)
 
     def teardown_method(self):
         """Este método se ejecuta al finalizar cada test"""
@@ -20,19 +21,28 @@ class TestSauceDemo:
         # 1. Navegar
         self.driver.get('https://saucedemo.com')
         
-        # 2. Ingresar credenciales (Esperas explícitas)
+         # 2. Cargar datos del JSON
+        with open('datos/usuarios.json') as f:
+            credenciales = json.load(f)
+        
+        # 3. Ingresar credenciales (Esperas explícitas)
+        # Primero buscamos el elemento, Localizar el campo de usuario
         user_input = self.wait.until(EC.presence_of_element_located((By.ID, 'user-name')))
-        user_input.send_keys('standard_user')
         
-        self.driver.find_element(By.ID, 'password').send_keys('secret_sauce')
+        # Luego usamos los datos del JSON
+        user_input.send_keys(credenciales['user'])
+        self.driver.find_element(By.ID, 'password').send_keys(credenciales['pass'])
+         # --- OPCIÓN SIN JSON (Directo) ---
+        # user_input.send_keys('standard_user')
+        # self.driver.find_element(By.ID, 'password').send_keys('secret_sauce')
+        
+        #click al boton
         self.driver.find_element(By.ID, 'login-button').click()
-
-        # 3. Validaciones obligatorias
-        assert '/inventory.html' in self.driver.current_url
         
+        # 4. Validaciones obligatorias
+        assert '/inventory.html' in self.driver.current_url
         header_title = self.wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'title')))
         assert header_title.text == 'Products'
-        
         print("\nTest Login: OK")
 
     def test_verificar_catalogo(self):
